@@ -14,19 +14,19 @@ import java.util.Map;
 public class Strategies {
 
     public static YoolooKarte[] genStratAI(YoolooKarte[] oldSort, String name) {
-        if (!Files.notExists(Path.of(name + ".txt"))) {
+        if (!Files.notExists(Path.of("./tmpusr/"+name + ".txt"))) {
             ArrayList<String> importedDataLastRound = new ArrayList<>();
             YoolooKarte[] newSort = new YoolooKarte[oldSort.length];
             Map<String, Integer> fileMap = new HashMap<>();
 
             try {
-                for (String convertString : Files.readAllLines(Path.of(name + ".txt"))) {
+                for (String convertString : Files.readAllLines(Path.of("./tmpusr/"+name + ".txt"))) {
                     String[] line = convertString.split("::");
-                    fileMap.put(line[0], Integer.parseInt(line[1]));
+                    fileMap.put(line[1], Integer.parseInt(line[0]));
                     newSort[Integer.parseInt(line[0])] = new YoolooKarte(oldSort[Integer.parseInt(line[0])].getFarbe(), Integer.parseInt(line[1]));
                 }
-                for (int i = 0; i < newSort.length; i++) {
-                    if (!fileMap.containsKey(i)) {
+                for (int i = 1; i < newSort.length; i++) {
+                    if (!fileMap.containsKey(i+"")) {
                         int j = 0;
                         while (j< newSort.length-1 && newSort[j] != null) {
                             j++;
@@ -34,7 +34,8 @@ public class Strategies {
                         newSort[j] = new YoolooKarte(oldSort[0].getFarbe(), i);
                     }
                 }
-                PrintWriter writer = new PrintWriter(new File(name+".txt"));
+                fileMap.clear();
+                PrintWriter writer = new PrintWriter(new File("./tmpusr/"+name+".txt"));
                 writer.print("");
                 writer.close();
 

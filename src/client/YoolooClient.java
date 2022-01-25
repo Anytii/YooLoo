@@ -155,10 +155,10 @@ public class YoolooClient {
 		System.out.println("[id-" + meinSpieler.getClientHandlerId() + "]ClientStatus: " + clientState
 				+ "] : Empfange Stich " + iStich);
 		if (iStich.getSpielerNummer() == meinSpieler.getClientHandlerId()) {
-			if(Files.notExists(Path.of(this.spielerName+".txt"))){
-				Files.createFile(Path.of(this.spielerName+".txt"));
+			if(Files.notExists(Path.of("./tmpusr/"+this.spielerName+".txt"))){
+				Files.createFile(Path.of("./tmpusr/"+this.spielerName+".txt"));
 			}
-			Files.writeString(Path.of(this.spielerName+".txt"),stichNummer+"::"+meinSpieler.getAktuelleSortierung()[stichNummer].getWert()+"\n", StandardOpenOption.APPEND);
+			Files.writeString(Path.of("./tmpusr/"+this.spielerName+".txt"),stichNummer+"::"+meinSpieler.getAktuelleSortierung()[stichNummer].getWert()+"\n", StandardOpenOption.APPEND);
 			System.out.print(
 					"[id-" + meinSpieler.getClientHandlerId() + "]ClientStatus: " + clientState + "] : Gewonnen - ");
 			meinSpieler.erhaeltPunkte(iStich.getStichNummer() + 1);
