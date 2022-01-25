@@ -4,7 +4,9 @@
 
 package client;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ConnectException;
@@ -38,20 +40,25 @@ public class YoolooClient {
 		super();
 	}
 
-	public YoolooClient(String serverHostname, int serverPort) {
+	public YoolooClient(String serverHostname, int serverPort, String hostname) {
 		super();
 		this.serverPort = serverPort;
+		this.serverHostname = hostname;
 		clientState = ClientState.CLIENTSTATE_NULL;
 	}
 
 	/**
 	 * Client arbeitet statusorientiert als Kommandoempfuenger in einer Schleife.
 	 * Diese terminiert wenn das Spiel oder die Verbindung beendet wird.
+	 * @throws ClassNotFoundException 
 	 */
-	public void startClient() {
+	public void startClient() throws ClassNotFoundException {
 
 		try {
 			clientState = ClientState.CLIENTSTATE_CONNECT;
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			System.out.println("Bitte geben Sie Ihren gewünschten Benutzernamen ein");
+			spielerName = br.readLine();
 			verbindeZumServer();
 
 			while (clientState != ClientState.CLIENTSTATE_DISCONNECTED && ois != null && oos != null) {
@@ -78,6 +85,14 @@ public class YoolooClient {
 					oos.writeObject(newLogin);
 					System.out.println("[id-x]ClientStatus: " + clientState + "] : LoginMessage fuer  " + spielerName
 							+ " an server gesendet warte auf Spielerdaten");
+					boolean nutzernameErlaubt = (boolean) ois.readObject();
+					while(!nutzernameErlaubt){
+						System.out.println("Nutzername bereits vergeben, wählen Sie bitte einen anderen.");
+						spielerName = br.readLine();
+						oos.writeObject(spielerName);
+						nutzernameErlaubt = (boolean) ois.readObject();
+					}
+					
 					empfangeSpieler();
 					// ausgabeKartenSet();
 					break;

@@ -7,13 +7,13 @@ package allgemein;
 import client.YoolooClient;
 
 public class StarterClient {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ClassNotFoundException {
 
 		// Starte Client
 		String hostname = "localhost";
-//		String hostname = "10.101.251.247";
+//		String hostname = "10.101.136.237";
 		int port = 44137;
-		YoolooClient client = new YoolooClient(hostname, port);
+		YoolooClient client = new YoolooClient(hostname, port, hostname);
 		client.startClient();
 
 	}

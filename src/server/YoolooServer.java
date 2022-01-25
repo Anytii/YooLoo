@@ -4,16 +4,28 @@
 
 package server;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+
+import common.YoolooKarte;
 import common.YoolooKartenspiel;
 
 public class YoolooServer {
+	
+	private List<Map<String, Object>> spielerListe = new ArrayList<>();
 
 	// Server Standardwerte koennen ueber zweite Konstruktor modifiziert werden!
 	private int port = 44137;
@@ -64,7 +76,14 @@ public class YoolooServer {
 			spielerPool = Executors.newCachedThreadPool();
 			clientHandlerList = new ArrayList<YoolooClientHandler>();
 			System.out.println("Server gestartet - warte auf Spieler");
-
+			
+			//TODO SPIELERKONTO - Datei laden
+			try {				
+				File data = new File("resources/data.json");
+				ObjectMapper mapper = new ObjectMapper();
+				spielerListe = mapper.readValue(data, new TypeReference<List<Map<String, Object>>>(){});
+			} catch(Exception e) {}
+			
 			while (serverAktiv) {
 				Socket client = null;
 
@@ -113,6 +132,58 @@ public class YoolooServer {
 			spielerPool.shutdown();
 		} else {
 			System.out.println("Servercode falsch");
+		}
+	}
+
+	public boolean checkUserName(String name) {
+		boolean isUnique = true;
+		for(Map<String, Object> spielerMap: spielerListe) {
+			if(name.equals(spielerMap.get("name")))
+				isUnique = false;
+		}
+		return isUnique;
+	}
+	
+	public YoolooKarte[] getSortierungFuerSpieler(String name, YoolooKartenspiel.Kartenfarbe farbe) {
+		YoolooKarte[] sortierung = null;
+		for(Map<String, Object> spielerMap: spielerListe) {
+			if(name.equals(spielerMap.get("name")))
+				sortierung =  getSortierungByString((List<Integer>)spielerMap.get("sortierung"), farbe);
+		}
+		return sortierung;
+	}
+	
+	private YoolooKarte[] getSortierungByString(List<Integer> werte, YoolooKartenspiel.Kartenfarbe farbe) {
+		if(werte == null || werte.size() == 0)
+			return null;
+		YoolooKarte[] sortierung = new  YoolooKarte[werte.size()];
+		for(int i=0; i<werte.size(); i++) {
+			sortierung[i] = new YoolooKarte(farbe, werte.get(i));
+		}
+		return sortierung;
+	}
+
+	public void updateSpielerData(String name, List<Integer> aktuelleSortierung) {
+		// TODO Auto-generated method stub
+		boolean updated = false;
+		for(Map<String, Object> spielerMap: spielerListe) {
+			if(name.equals(spielerMap.get("name"))) {
+				spielerMap.put("sortierung",aktuelleSortierung);
+				updated = true;
+			}
+		}
+		if(!updated) {
+			Map<String, Object> spielerMap = new HashMap<>();
+			spielerMap.put("name", name);
+			spielerMap.put("sortierung", aktuelleSortierung);
+			spielerListe.add(spielerMap);
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
+		try {
+			writer.writeValue(new File("resources/data.json"), spielerListe);
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
