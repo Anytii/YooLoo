@@ -21,7 +21,7 @@ import messages.ServerMessage;
 
 public class YoolooClient {
 
-	private String serverHostname = "localhost";
+	private String serverHostname = constants.Constants.getSERVERIP();
 	private int serverPort = 44137;
 	private Socket serverSocket = null;
 	private ObjectInputStream ois = null;
