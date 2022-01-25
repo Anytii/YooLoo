@@ -32,5 +32,16 @@ public class YoolooKarte implements Serializable {
 	public String toString() {
 		return "YoolooKarte [farbe=" + farbe + ", wert=" + wert + "]";
 	}
+	
+	//start lze
+	/**
+	 * Setzt einen neuen Kartenwert.
+	 * @param neuerWert
+	 */
+	public void setWert(int neuerWert)
+	{
+		wert = neuerWert;
+	}
+	//stop lze
 
 }

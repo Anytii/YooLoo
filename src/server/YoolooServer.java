@@ -35,7 +35,12 @@ public class YoolooServer {
 	private ArrayList<YoolooClientHandler> clientHandlerList;
 
 	private ExecutorService spielerPool;
-
+	
+	// start lze
+	// Hier kann man die Servereinstellung einstellen, ob die Regeln eingehalten werden sollen
+	public boolean RulesEnabled = true;
+	// Stop lze
+	
 	/**
 	 * Serverseitig durch ClientHandler angebotenen SpielModi. Bedeutung der
 	 * einzelnen Codes siehe Inlinekommentare.
