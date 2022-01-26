@@ -96,28 +96,10 @@ public class YoolooServer {
 					YoolooClientHandler clientHandler = new YoolooClientHandler(this, client);
 					clientHandlerList.add(clientHandler);
 					System.out.println("[YoolooServer] Anzahl verbundene Spieler: " + clientHandlerList.size());
-					
-					//gewuenschten Nutzernamen abfragen
-//					ObjectOutputStream clientOos = new ObjectOutputStream(client.getOutputStream());
-					ObjectInputStream clientOis = new ObjectInputStream(client.getInputStream());
-					String username = clientOis.readObject().toString();
-					clientHandler.setPreferredUsername(username);
-//					boolean ok = checkUserName(username);
-//					while(!ok) {
-//						username = clientOis.readObject().toString();
-//						ok = checkUserName(username);
-//						clientOos.writeObject(ok);
-//					}
 				} catch (IOException e) {
 					System.out.println("Client Verbindung gescheitert");
 					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				} 
-//				catch (ClassNotFoundException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
+				}
 				// Neue Session starten wenn ausreichend Spieler verbunden sind!
 				if (clientHandlerList.size() >= Math.min(spielerProRunde,
 						YoolooKartenspiel.Kartenfarbe.values().length)) {
@@ -131,7 +113,7 @@ public class YoolooServer {
 						ch.joinSession(yoolooSession);
 						spielerPool.execute(ch); // Start der ClientHandlerThread - Aufruf der Methode run()
 					}
-
+					
 					// nuechste Runde eroeffnen
 					clientHandlerList = new ArrayList<YoolooClientHandler>();
 				}
@@ -153,16 +135,6 @@ public class YoolooServer {
 		} else {
 			System.out.println("Servercode falsch");
 		}
-	}
-
-	public boolean checkUserName(String name) {
-		boolean isUnique = true;
-		for(YoolooClientHandler clientHandler: clientHandlerList) {
-			YoolooSpieler spieler = clientHandler.getSpieler();
-			if(spieler != null && name.equals(spieler.getName()))
-				isUnique = false;
-		}
-		return isUnique;
 	}
 	
 	public YoolooKarte[] getSortierungFuerSpieler(String name, YoolooKartenspiel.Kartenfarbe farbe) {

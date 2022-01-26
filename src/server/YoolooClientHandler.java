@@ -43,8 +43,6 @@ public class YoolooClientHandler extends Thread {
 	private YoolooSpieler meinSpieler = null;
 	private int clientHandlerId;
 	
-	private String preferredUsername = null;
-
 	public YoolooClientHandler(YoolooServer yoolooServer, Socket clientSocket) {
 		this.myServer = yoolooServer;
 		myServer.toString();
@@ -96,17 +94,18 @@ public class YoolooClientHandler extends Thread {
 						
 						meinSpieler = new YoolooSpieler(newLogin.getSpielerName(), YoolooKartenspiel.maxKartenWert);
 						meinSpieler.setClientHandlerId(clientHandlerId);
-						//TODO SPIELERKONTO - ggf. Daten zu diesem Spielernamen laden
-						String username = preferredUsername != null ? preferredUsername : newLogin.getSpielerName();
-						meinSpieler.setName(username);
-						YoolooKarte[] sortierung = myServer.getSortierungFuerSpieler(username, meinSpieler.getSpielfarbe());
+						YoolooKarte[] sortierung = myServer.getSortierungFuerSpieler(meinSpieler.getName(), meinSpieler.getSpielfarbe());
 						if(sortierung != null)
 							meinSpieler.setAktuelleSortierung(sortierung);
-						registriereSpielerInSession(meinSpieler);
+						boolean erfolgreich = registriereSpielerInSession(meinSpieler);
 						oos.writeObject(meinSpieler);
-						sendeKommando(ServerMessageType.SERVERMESSAGE_SORT_CARD_SET, ClientState.CLIENTSTATE_SORT_CARDS,
-								null);
-						this.state = ServerState.ServerState_PLAY_SESSION;
+						if(erfolgreich) {
+							sendeKommando(ServerMessageType.SERVERMESSAGE_SORT_CARD_SET, ClientState.CLIENTSTATE_SORT_CARDS,
+									null);
+							this.state = ServerState.ServerState_PLAY_SESSION;
+						} else {
+							sendeKommando(ServerMessageType.SERVERMESSAGE_SENDLOGIN, ClientState.CLIENTSTATE_LOGIN, null);
+						}
 						break;
 					}
 				case ServerState_PLAY_SESSION:
@@ -203,10 +202,11 @@ public class YoolooClientHandler extends Thread {
 		return null;
 	}
 
-	private void registriereSpielerInSession(YoolooSpieler meinSpieler) {
+	private boolean registriereSpielerInSession(YoolooSpieler meinSpieler) {
 		System.out
 				.println("[ClientHandler" + clientHandlerId + "] registriereSpielerInSession " + meinSpieler.getName());
-		session.getAktuellesSpiel().spielerRegistrieren(meinSpieler);
+		YoolooSpieler spieler = session.getAktuellesSpiel().spielerRegistrieren(meinSpieler);
+		return spieler != null;
 	}
 
 	/**
@@ -264,17 +264,4 @@ public class YoolooClientHandler extends Thread {
 		this.session = session;
 
 	}
-
-	public String getPreferredUsername() {
-		return preferredUsername;
-	}
-
-	public void setPreferredUsername(String preferredUsername) {
-		this.preferredUsername = preferredUsername;
-	}
-
-	public YoolooSpieler getSpieler() {
-		return meinSpieler;
-	}
-
 }

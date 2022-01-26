@@ -82,6 +82,10 @@ public class YoolooKartenspiel {
 	 * @return
 	 */
 	public YoolooSpieler spielerRegistrieren(YoolooSpieler neuerSpieler) {
+		for(YoolooSpieler spieler: spielerliste) {
+			if(spieler.getName().equals(neuerSpieler.getName()))
+				return null;
+		}
 		Kartenfarbe[] farben = Kartenfarbe.values();
 		neuerSpieler.setSpielfarbe(farben[neuerSpieler.getClientHandlerId()]);
 		YoolooKarte[] kartenDesSpielers = spielkarten[neuerSpieler.getClientHandlerId()];

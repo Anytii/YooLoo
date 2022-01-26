@@ -35,6 +35,7 @@ public class YoolooClient {
 	private LoginMessage newLogin = null;
 	private YoolooSpieler meinSpieler;
 	private YoolooStich[] spielVerlauf = null;
+	private boolean registrierungVersucht = false;
 
 	public YoolooClient() {
 		super();
@@ -57,18 +58,6 @@ public class YoolooClient {
 		try {
 			clientState = ClientState.CLIENTSTATE_CONNECT;
 			verbindeZumServer();
-			//Nutzernamen aussuchen
-			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-			System.out.println("Bitte geben Sie Ihren gewünschten Benutzernamen ein");
-			spielerName = br.readLine();
-			oos.writeObject(spielerName);
-//			boolean accept = (boolean)ois.readObject();
-//			while(!accept) {
-//				//Nachricht an Client senden und auf antwort warten.
-//				System.out.println("Der Nutzername ist bereits vergeben, nutzen Sie bitte einen anderen.");
-//				spielerName = br.readLine();
-//				oos.writeObject(spielerName);
-//			}
 
 			while (clientState != ClientState.CLIENTSTATE_DISCONNECTED && ois != null && oos != null) {
 				// 1. Schritt Kommado empfangen
@@ -221,8 +210,16 @@ public class YoolooClient {
 		return null;
 	}
 
-	private LoginMessage eingabeSpielerDatenFuerLogin() {
+	private LoginMessage eingabeSpielerDatenFuerLogin() throws IOException {
 		// TODO Spielername, GameMode und ggfs mehr ermitteln
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		if(registrierungVersucht) {
+			System.out.println("Der Benutzername ist bereits vergeben. Bitte verwenden Sie einen anderen.");
+		} else {
+			System.out.println("Bitte geben Sie einen Benutzernamen ein.");
+			registrierungVersucht = true;
+		}
+		spielerName = br.readLine();
 		return null;
 	}
 
