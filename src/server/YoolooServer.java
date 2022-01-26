@@ -24,6 +24,7 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 
 import common.YoolooKarte;
 import common.YoolooKartenspiel;
+import common.YoolooSpieler;
 
 public class YoolooServer {
 	
@@ -95,27 +96,28 @@ public class YoolooServer {
 					YoolooClientHandler clientHandler = new YoolooClientHandler(this, client);
 					clientHandlerList.add(clientHandler);
 					System.out.println("[YoolooServer] Anzahl verbundene Spieler: " + clientHandlerList.size());
+					
+					//gewuenschten Nutzernamen abfragen
+//					ObjectOutputStream clientOos = new ObjectOutputStream(client.getOutputStream());
+					ObjectInputStream clientOis = new ObjectInputStream(client.getInputStream());
+					String username = clientOis.readObject().toString();
+					clientHandler.setPreferredUsername(username);
+//					boolean ok = checkUserName(username);
+//					while(!ok) {
+//						username = clientOis.readObject().toString();
+//						ok = checkUserName(username);
+//						clientOos.writeObject(ok);
+//					}
 				} catch (IOException e) {
 					System.out.println("Client Verbindung gescheitert");
 					e.printStackTrace();
-				}
-				
-				// gewuenschten Nutzernamen abfragen
-				try {
-					if(client != null) {
-						ObjectOutputStream clientOos = new ObjectOutputStream(client.getOutputStream());
-						ObjectInputStream clientOis = new ObjectInputStream(client.getInputStream());
-						String username = clientOis.readObject().toString();
-						boolean ok = checkUserName(username);
-						while(!ok) {
-							username = clientOis.readObject().toString();
-							ok = checkUserName(username);
-						}
-					}
-				} catch(Exception e){
+				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
-				}
-
+				} 
+//				catch (ClassNotFoundException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 				// Neue Session starten wenn ausreichend Spieler verbunden sind!
 				if (clientHandlerList.size() >= Math.min(spielerProRunde,
 						YoolooKartenspiel.Kartenfarbe.values().length)) {
@@ -155,8 +157,9 @@ public class YoolooServer {
 
 	public boolean checkUserName(String name) {
 		boolean isUnique = true;
-		for(Map<String, Object> spielerMap: spielerListe) {
-			if(name.equals(spielerMap.get("name")))
+		for(YoolooClientHandler clientHandler: clientHandlerList) {
+			YoolooSpieler spieler = clientHandler.getSpieler();
+			if(spieler != null && name.equals(spieler.getName()))
 				isUnique = false;
 		}
 		return isUnique;

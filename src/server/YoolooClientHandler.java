@@ -98,6 +98,7 @@ public class YoolooClientHandler extends Thread {
 						meinSpieler.setClientHandlerId(clientHandlerId);
 						//TODO SPIELERKONTO - ggf. Daten zu diesem Spielernamen laden
 						String username = preferredUsername != null ? preferredUsername : newLogin.getSpielerName();
+						meinSpieler.setName(username);
 						YoolooKarte[] sortierung = myServer.getSortierungFuerSpieler(username, meinSpieler.getSpielfarbe());
 						if(sortierung != null)
 							meinSpieler.setAktuelleSortierung(sortierung);
@@ -270,6 +271,10 @@ public class YoolooClientHandler extends Thread {
 
 	public void setPreferredUsername(String preferredUsername) {
 		this.preferredUsername = preferredUsername;
+	}
+
+	public YoolooSpieler getSpieler() {
+		return meinSpieler;
 	}
 
 }

@@ -56,18 +56,19 @@ public class YoolooClient {
 
 		try {
 			clientState = ClientState.CLIENTSTATE_CONNECT;
+			verbindeZumServer();
+			//Nutzernamen aussuchen
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			System.out.println("Bitte geben Sie Ihren gewünschten Benutzernamen ein");
 			spielerName = br.readLine();
-			verbindeZumServer();
 			oos.writeObject(spielerName);
-			boolean accept = (boolean) ois.readObject();
-			while(!accept) {
-				//Nachricht an Client senden und auf antwort warten.
-				System.out.println("DerNutzername ist bereits vergeben, nutzen Sie bitte einen anderen.");
-				spielerName = br.readLine();
-				oos.writeObject(spielerName);
-			}
+//			boolean accept = (boolean)ois.readObject();
+//			while(!accept) {
+//				//Nachricht an Client senden und auf antwort warten.
+//				System.out.println("Der Nutzername ist bereits vergeben, nutzen Sie bitte einen anderen.");
+//				spielerName = br.readLine();
+//				oos.writeObject(spielerName);
+//			}
 
 			while (clientState != ClientState.CLIENTSTATE_DISCONNECTED && ois != null && oos != null) {
 				// 1. Schritt Kommado empfangen
@@ -92,15 +93,7 @@ public class YoolooClient {
 					// Client meldet den Spieler an den Server
 					oos.writeObject(newLogin);
 					System.out.println("[id-x]ClientStatus: " + clientState + "] : LoginMessage fuer  " + spielerName
-							+ " an server gesendet warte auf Spielerdaten");
-					boolean nutzernameErlaubt = (boolean) ois.readObject();
-					while(!nutzernameErlaubt){
-						System.out.println("Nutzername bereits vergeben, wählen Sie bitte einen anderen.");
-						spielerName = br.readLine();
-						oos.writeObject(spielerName);
-						nutzernameErlaubt = (boolean) ois.readObject();
-					}
-					
+							+ " an server gesendet warte auf Spielerdaten");				
 					empfangeSpieler();
 					// ausgabeKartenSet();
 					break;
