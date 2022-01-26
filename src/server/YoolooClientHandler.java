@@ -42,6 +42,8 @@ public class YoolooClientHandler extends Thread {
 	private YoolooSession session;
 	private YoolooSpieler meinSpieler = null;
 	private int clientHandlerId;
+	
+	private String preferredUsername = null;
 
 	public YoolooClientHandler(YoolooServer yoolooServer, Socket clientSocket) {
 		this.myServer = yoolooServer;
@@ -92,20 +94,11 @@ public class YoolooClientHandler extends Thread {
 						LoginMessage newLogin = (LoginMessage) antwortObject;
 						// TODO GameMode des Logins wird noch nicht ausgewertet - done
 						
-						//TODO SPIELERKONTO - Nutzernamen ueberpruefen
-						String username = newLogin.getSpielerName();
-						boolean isUnique = myServer.checkUserName(username);
-						oos.writeObject(isUnique);
-						while(!isUnique) {
-							//Nachricht an Client senden und auf antwort warten.
-							username = ois.readObject().toString();
-							isUnique = myServer.checkUserName(username);
-							oos.writeObject(isUnique);
-						}
 						meinSpieler = new YoolooSpieler(newLogin.getSpielerName(), YoolooKartenspiel.maxKartenWert);
 						meinSpieler.setClientHandlerId(clientHandlerId);
 						//TODO SPIELERKONTO - ggf. Daten zu diesem Spielernamen laden
-						YoolooKarte[] sortierung = myServer.getSortierungFuerSpieler(meinSpieler.getName(), meinSpieler.getSpielfarbe());
+						String username = preferredUsername != null ? preferredUsername : newLogin.getSpielerName();
+						YoolooKarte[] sortierung = myServer.getSortierungFuerSpieler(username, meinSpieler.getSpielfarbe());
 						if(sortierung != null)
 							meinSpieler.setAktuelleSortierung(sortierung);
 						registriereSpielerInSession(meinSpieler);
@@ -162,8 +155,6 @@ public class YoolooClientHandler extends Thread {
 			e.printStackTrace();
 		} catch (IOException e) {
 			System.err.println(e);
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} finally {
 			System.out.println("[ClientHandler" + clientHandlerId + "] Verbindung zu " + socketAddress + " beendet");
@@ -271,6 +262,14 @@ public class YoolooClientHandler extends Thread {
 		System.out.println("[ClientHandler" + clientHandlerId + "] joinSession " + session.toString());
 		this.session = session;
 
+	}
+
+	public String getPreferredUsername() {
+		return preferredUsername;
+	}
+
+	public void setPreferredUsername(String preferredUsername) {
+		this.preferredUsername = preferredUsername;
 	}
 
 }

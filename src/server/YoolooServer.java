@@ -6,6 +6,8 @@ package server;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -95,6 +97,22 @@ public class YoolooServer {
 					System.out.println("[YoolooServer] Anzahl verbundene Spieler: " + clientHandlerList.size());
 				} catch (IOException e) {
 					System.out.println("Client Verbindung gescheitert");
+					e.printStackTrace();
+				}
+				
+				// gewuenschten Nutzernamen abfragen
+				try {
+					if(client != null) {
+						ObjectOutputStream clientOos = new ObjectOutputStream(client.getOutputStream());
+						ObjectInputStream clientOis = new ObjectInputStream(client.getInputStream());
+						String username = clientOis.readObject().toString();
+						boolean ok = checkUserName(username);
+						while(!ok) {
+							username = clientOis.readObject().toString();
+							ok = checkUserName(username);
+						}
+					}
+				} catch(Exception e){
 					e.printStackTrace();
 				}
 

@@ -60,6 +60,14 @@ public class YoolooClient {
 			System.out.println("Bitte geben Sie Ihren gewünschten Benutzernamen ein");
 			spielerName = br.readLine();
 			verbindeZumServer();
+			oos.writeObject(spielerName);
+			boolean accept = (boolean) ois.readObject();
+			while(!accept) {
+				//Nachricht an Client senden und auf antwort warten.
+				System.out.println("DerNutzername ist bereits vergeben, nutzen Sie bitte einen anderen.");
+				spielerName = br.readLine();
+				oos.writeObject(spielerName);
+			}
 
 			while (clientState != ClientState.CLIENTSTATE_DISCONNECTED && ois != null && oos != null) {
 				// 1. Schritt Kommado empfangen
