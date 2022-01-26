@@ -114,7 +114,7 @@ public class YoolooClientHandler extends Thread {
 							//Start lze
 							//Hier wird die Überprüfung der Regel aufgerufen, und bei einem Verstoß der Regel der Kartenwert von neueKarte auf 0 gesetzt.
 							//Im Anschluss wird die Karte dem aktuellen Stich hinzugefügt und die Karte der Liste der gespielten Karten hinzugefügt.
-							meineRegeln.überprüfeRegelDK(neueKarte, clientHandlerId, stichNummer, myServer.RulesEnabled);
+							meineRegeln.ueberpruefeRegelDK(neueKarte, clientHandlerId, stichNummer, myServer.RulesEnabled, meinSpieler);
 							YoolooStich currentstich = spieleKarte(stichNummer, neueKarte);
 							meineRegeln.addGespielteKarte(neueKarte);
 							//Stop lze

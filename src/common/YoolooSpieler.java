@@ -17,12 +17,16 @@ public class YoolooSpieler implements Serializable {
 	private int clientHandlerId = -1;
 	private int punkte;
 	private YoolooKarte[] aktuelleSortierung;
+	private int Cheatversuche;
+	private boolean sollCheaten;
 
 	public YoolooSpieler(String name, int maxKartenWert) {
 		this.name = name;
 		this.punkte = 0;
 		this.spielfarbe = null;
 		this.aktuelleSortierung = new YoolooKarte[maxKartenWert];
+		this.Cheatversuche = 0;
+		this.sollCheaten = false;
 	}
 
 	// Sortierung wird zufuellig ermittelt
@@ -37,7 +41,29 @@ public class YoolooSpieler implements Serializable {
 			// System.out.println(i+ ". neuerIndex: "+neuerIndex);
 		}
 		aktuelleSortierung = neueSortierung;
+		if(sollCheaten) {
+			cheaten();
+		}
 	}
+	
+	//start lze
+	/**
+	 * Es wird ein Kartenwert der aktuellen Sortierung unter 4 mit einem zufälligen Wert zwischen zwischen 8-10 ausgetauscht.
+	 * Somit wird eine Karte doppelt ausgespielt.
+	 */
+	public void cheaten()
+	{		
+		for(int i = 0; i < aktuelleSortierung.length; i++)
+		{
+			if(aktuelleSortierung[i].getWert() <=3)
+			{
+				int neuerWert = 7 + (int)(Math.random() * ((10 - 7) + 1));
+				aktuelleSortierung[i].setWert(neuerWert);
+				break;			
+			}
+		}
+	}
+	//Stop lze
 
 	public int erhaeltPunkte(int neuePunkte) {
 		System.out.print(name + " hat " + punkte + " P - erhaelt " + neuePunkte + " P - neue Summe: ");
@@ -95,6 +121,21 @@ public class YoolooSpieler implements Serializable {
 	public void stichAuswerten(YoolooStich stich) {
 		System.out.println(stich.toString());
 
+	}
+	
+	public void increaseCheatversuche()
+	{
+		Cheatversuche++;
+	}
+	
+	public int getCheatversuche()
+	{
+		return Cheatversuche;
+	}
+	
+	public void setSollCheaten(boolean neuSollCheaten)
+	{
+		sollCheaten = neuSollCheaten;
 	}
 
 }

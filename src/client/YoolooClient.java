@@ -83,6 +83,10 @@ public class YoolooClient {
 					break;
 				case SERVERMESSAGE_SORT_CARD_SET:
 					// sortieren Karten
+					//start lze
+					//Zum Testen wird hier der Spieler cheaten in dem er eine Karte doppelt legt.
+					//meinSpieler.setSollCheaten(true);
+					//stop lze
 					meinSpieler.sortierungFestlegen();
 					ausgabeKartenSet();
 					// ggfs. Spielverlauf löschen
