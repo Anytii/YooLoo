@@ -81,11 +81,7 @@ public class YoolooServer {
 			System.out.println("Server gestartet - warte auf Spieler");
 			
 			//TODO SPIELERKONTO - Datei laden
-			try {				
-				File data = new File("resources/data.json");
-				ObjectMapper mapper = new ObjectMapper();
-				spielerListe = mapper.readValue(data, new TypeReference<List<Map<String, Object>>>(){});
-			} catch(Exception e) {}
+			Spielerdaten.datenLaden();
 			
 			while (serverAktiv) {
 				Socket client = null;
@@ -134,49 +130,6 @@ public class YoolooServer {
 			spielerPool.shutdown();
 		} else {
 			System.out.println("Servercode falsch");
-		}
-	}
-	
-	public YoolooKarte[] getSortierungFuerSpieler(String name, YoolooKartenspiel.Kartenfarbe farbe) {
-		YoolooKarte[] sortierung = null;
-		for(Map<String, Object> spielerMap: spielerListe) {
-			if(name.equals(spielerMap.get("name")))
-				sortierung =  getSortierungByString((List<Integer>)spielerMap.get("sortierung"), farbe);
-		}
-		return sortierung;
-	}
-	
-	private YoolooKarte[] getSortierungByString(List<Integer> werte, YoolooKartenspiel.Kartenfarbe farbe) {
-		if(werte == null || werte.size() == 0)
-			return null;
-		YoolooKarte[] sortierung = new  YoolooKarte[werte.size()];
-		for(int i=0; i<werte.size(); i++) {
-			sortierung[i] = new YoolooKarte(farbe, werte.get(i));
-		}
-		return sortierung;
-	}
-
-	public void updateSpielerData(String name, List<Integer> aktuelleSortierung) {
-		// TODO Auto-generated method stub
-		boolean updated = false;
-		for(Map<String, Object> spielerMap: spielerListe) {
-			if(name.equals(spielerMap.get("name"))) {
-				spielerMap.put("sortierung",aktuelleSortierung);
-				updated = true;
-			}
-		}
-		if(!updated) {
-			Map<String, Object> spielerMap = new HashMap<>();
-			spielerMap.put("name", name);
-			spielerMap.put("sortierung", aktuelleSortierung);
-			spielerListe.add(spielerMap);
-		}
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-		try {
-			writer.writeValue(new File("resources/data.json"), spielerListe);
-		}catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 }

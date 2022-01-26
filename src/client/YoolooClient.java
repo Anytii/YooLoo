@@ -14,6 +14,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import common.LoginMessage;
+import common.YoolooKarte;
 import common.YoolooKartenspiel;
 import common.YoolooSpieler;
 import common.YoolooStich;
@@ -88,7 +89,11 @@ public class YoolooClient {
 					break;
 				case SERVERMESSAGE_SORT_CARD_SET:
 					// sortieren Karten
-					meinSpieler.sortierungFestlegen();
+					YoolooKarte[] sortierung = (YoolooKarte[]) ois.readObject();
+					if(sortierung != null)
+						meinSpieler.setAktuelleSortierung(sortierung);
+					else
+						meinSpieler.sortierungFestlegen();
 					ausgabeKartenSet();
 					// ggfs. Spielverlauf löschen
 					spielVerlauf = new YoolooStich[YoolooKartenspiel.maxKartenWert];

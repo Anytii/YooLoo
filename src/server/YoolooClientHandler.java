@@ -94,14 +94,12 @@ public class YoolooClientHandler extends Thread {
 						
 						meinSpieler = new YoolooSpieler(newLogin.getSpielerName(), YoolooKartenspiel.maxKartenWert);
 						meinSpieler.setClientHandlerId(clientHandlerId);
-						YoolooKarte[] sortierung = myServer.getSortierungFuerSpieler(meinSpieler.getName(), meinSpieler.getSpielfarbe());
-						if(sortierung != null)
-							meinSpieler.setAktuelleSortierung(sortierung);
 						boolean erfolgreich = registriereSpielerInSession(meinSpieler);
 						oos.writeObject(meinSpieler);
 						if(erfolgreich) {
-							sendeKommando(ServerMessageType.SERVERMESSAGE_SORT_CARD_SET, ClientState.CLIENTSTATE_SORT_CARDS,
-									null);
+							YoolooKarte[] sortierung = Spielerdaten.getSortierungFuerSpieler(meinSpieler.getName(), meinSpieler.getSpielfarbe());
+							sendeKommando(ServerMessageType.SERVERMESSAGE_SORT_CARD_SET, ClientState.CLIENTSTATE_SORT_CARDS, null);
+							oos.writeObject(sortierung);
 							this.state = ServerState.ServerState_PLAY_SESSION;
 						} else {
 							sendeKommando(ServerMessageType.SERVERMESSAGE_SENDLOGIN, ClientState.CLIENTSTATE_LOGIN, null);
@@ -137,7 +135,7 @@ public class YoolooClientHandler extends Thread {
 						break;
 					}
 					//TODO SPIELERKONTO - Daten für alle Spieler aktualisieren und in Datei speichern
-					myServer.updateSpielerData(meinSpieler.getName(), aktuelleSortierung);
+					Spielerdaten.updateSpielerData(meinSpieler.getName(), aktuelleSortierung);
 				case ServerState_DISCONNECT:
 				// todo cic
 				
@@ -203,8 +201,7 @@ public class YoolooClientHandler extends Thread {
 	}
 
 	private boolean registriereSpielerInSession(YoolooSpieler meinSpieler) {
-		System.out
-				.println("[ClientHandler" + clientHandlerId + "] registriereSpielerInSession " + meinSpieler.getName());
+		System.out.println("[ClientHandler" + clientHandlerId + "] registriereSpielerInSession " + meinSpieler.getName());
 		YoolooSpieler spieler = session.getAktuellesSpiel().spielerRegistrieren(meinSpieler);
 		return spieler != null;
 	}
