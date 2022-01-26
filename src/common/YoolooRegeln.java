@@ -1,4 +1,3 @@
-//start lze
 package common;
 
 import java.util.ArrayList;
@@ -73,4 +72,3 @@ public class YoolooRegeln {
 		return stichnummer;
 	}
 }
-//stop lze

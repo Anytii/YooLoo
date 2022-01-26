@@ -46,7 +46,6 @@ public class YoolooSpieler implements Serializable {
 		}
 	}
 	
-	//start lze
 	/**
 	 * Es wird ein Kartenwert der aktuellen Sortierung unter 4 mit einem zufälligen Wert zwischen zwischen 8-10 ausgetauscht.
 	 * Somit wird eine Karte doppelt ausgespielt.
@@ -63,7 +62,6 @@ public class YoolooSpieler implements Serializable {
 			}
 		}
 	}
-	//Stop lze
 
 	public int erhaeltPunkte(int neuePunkte) {
 		System.out.print(name + " hat " + punkte + " P - erhaelt " + neuePunkte + " P - neue Summe: ");

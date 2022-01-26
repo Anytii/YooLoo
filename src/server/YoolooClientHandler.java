@@ -42,9 +42,7 @@ public class YoolooClientHandler extends Thread {
 	private YoolooSpieler meinSpieler = null;
 	private int clientHandlerId;
 	
-	//Start lze
 	private YoolooRegeln meineRegeln = new YoolooRegeln();
-	//Stop lze
 
 	public YoolooClientHandler(YoolooServer yoolooServer, Socket clientSocket) {
 		this.myServer = yoolooServer;
