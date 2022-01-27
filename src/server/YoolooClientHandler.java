@@ -94,6 +94,8 @@ public class YoolooClientHandler extends Thread {
 						
 						meinSpieler = new YoolooSpieler(newLogin.getSpielerName(), YoolooKartenspiel.maxKartenWert);
 						meinSpieler.setClientHandlerId(clientHandlerId);
+						
+						//TODO SPIELERKONTO doppelte Benutzernamen in einem Spiel verhindern
 						boolean erfolgreich = registriereSpielerInSession(meinSpieler);
 						oos.writeObject(meinSpieler);
 						if(erfolgreich) {

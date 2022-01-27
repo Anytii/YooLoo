@@ -44,20 +44,19 @@ public class Spielerdaten {
 	 * @throws IOException
 	 **/
 	public static void datenLaden() {
-					
+		try {
 			File data = new File(path);
-			ObjectMapper mapper = new ObjectMapper();
-			try {
+			if(data.exists()) {
+				ObjectMapper mapper = new ObjectMapper();
 				spielerDaten = mapper.readValue(data, new TypeReference<List<Map<String, Object>>>(){});
-			} catch (StreamReadException e) {
-				e.printStackTrace();
-			} catch (DatabindException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
-		
-		
+		} catch (StreamReadException e) {
+			e.printStackTrace();
+		} catch (DatabindException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/** 

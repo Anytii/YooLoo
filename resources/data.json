@@ -1,7 +1,16 @@
 [ {
-  "sortierung" : [ 7, 4, 2, 1, 3, 10, 6, 5, 8, 9 ],
-  "name" : "test"
+  "sortierung" : [ 8, 6, 1, 7, 9, 3, 2, 10, 5, 4 ],
+  "name" : "Kevin"
 }, {
-  "sortierung" : [ 7, 2, 4, 9, 10, 8, 1, 6, 3, 5 ],
-  "name" : "test1"
+  "sortierung" : [ 10, 9, 5, 6, 2, 8, 3, 4, 1, 7 ],
+  "name" : "Timo"
+}, {
+  "sortierung" : [ 4, 6, 1, 9, 2, 10, 3, 7, 5, 8 ],
+  "name" : "Alex"
+}, {
+  "sortierung" : [ 2, 3, 4, 6, 8, 1, 10, 9, 5, 7 ],
+  "name" : "Lennart"
+}, {
+  "sortierung" : [ 6, 2, 3, 1, 4, 5, 9, 7, 8, 10 ],
+  "name" : "Niklas"
 } ]
