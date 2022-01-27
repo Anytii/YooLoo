@@ -249,5 +249,8 @@ public class YoolooClientHandler extends Thread {
 		this.session = session;
 
 	}
+	public YoolooSpieler getPlayer() {
+		return meinSpieler;
+	}
 
 }
