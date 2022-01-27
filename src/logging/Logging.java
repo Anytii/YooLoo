@@ -1,13 +1,14 @@
 package logging;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-public class Logging {
+public class Logging implements Serializable{
 
     private Logger LOGGER=null;
 

@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
@@ -16,6 +18,7 @@ import common.YoolooKartenspiel;
 
 public class YoolooServer {
 
+	private List<Map<String, Object>> spielerListe = new ArrayList<>();
 	private Logger LOGGER = new logging.Logging(YoolooServer.class.getName()).getLogger();
 
 	// Server Standardwerte koennen ueber zweite Konstruktor modifiziert werden!
@@ -70,6 +73,7 @@ public class YoolooServer {
 			clientHandlerList = new ArrayList<YoolooClientHandler>();
 			LOGGER.info("Server gestartet - warte auf Spieler");
 
+			Spielerdaten.datenLaden();
 			while (serverAktiv) {
 				Socket client = null;
 

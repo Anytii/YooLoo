@@ -12,8 +12,12 @@ public class StarterClient {
 		// Starte Client
 		String hostname = constants.Constants.getSERVERIP();
 		int port = 44137;
-		YoolooClient client = new YoolooClient(hostname, port);
-		client.startClient();
+		try {
+			YoolooClient client = new YoolooClient(hostname, port);
+			client.startClient();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 }

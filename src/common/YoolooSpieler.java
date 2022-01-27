@@ -117,8 +117,7 @@ public class YoolooSpieler implements Serializable {
     }
 
     public void stichAuswerten(YoolooStich stich) {
-        LOGGER.log(stich.toString());
-
+        LOGGER.info(stich.toString());
     }
   
     public void increaseCheatversuche()

@@ -15,6 +15,7 @@ import java.nio.file.StandardOpenOption;
 
 import allgemein.StarterServer;
 import common.LoginMessage;
+import common.YoolooKarte;
 import common.YoolooKartenspiel;
 import common.YoolooSpieler;
 import common.YoolooStich;
@@ -39,6 +40,8 @@ public class YoolooClient {
     private LoginMessage newLogin = null;
     private YoolooSpieler meinSpieler;
     private YoolooStich[] spielVerlauf = null;
+    
+    private boolean registrierungVersucht = false;
 
     public YoolooClient() {
         super();
@@ -53,8 +56,9 @@ public class YoolooClient {
     /**
      * Client arbeitet statusorientiert als Kommandoempfuenger in einer Schleife.
      * Diese terminiert wenn das Spiel oder die Verbindung beendet wird.
+     * @throws ClassNotFoundException 
      */
-    public void startClient() {
+    public void startClient() throws ClassNotFoundException {
 
         try {
             clientState = ClientState.CLIENTSTATE_CONNECT;
@@ -94,7 +98,11 @@ public class YoolooClient {
 					// Dadurch wird die Funktion meinSpieler.sortierungFestlegen() beeinflusst.
 					//meinSpieler.setSollCheaten(true);
 					// stop lze
-                        meinSpieler.sortierungFestlegen();
+                    	YoolooKarte[] sortierung = (YoolooKarte[]) ois.readObject();
+    					if(sortierung != null)
+    						meinSpieler.setAktuelleSortierung(sortierung);
+    					else
+    						meinSpieler.sortierungFestlegen();
                         ausgabeKartenSet();
                         // ggfs. Spielverlauf löschen
                         spielVerlauf = new YoolooStich[YoolooKartenspiel.maxKartenWert];
@@ -215,10 +223,18 @@ public class YoolooClient {
         return null;
     }
 
-    private LoginMessage eingabeSpielerDatenFuerLogin() {
-        // TODO Spielername, GameMode und ggfs mehr ermitteln
-        return null;
-    }
+	private LoginMessage eingabeSpielerDatenFuerLogin() throws IOException {
+		// TODO Spielername, GameMode und ggfs mehr ermitteln
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		if(registrierungVersucht) {
+			System.out.println("Der Benutzername ist bereits vergeben. Bitte verwenden Sie einen anderen.");
+		} else {
+			System.out.println("Bitte geben Sie einen Benutzernamen ein.");
+			registrierungVersucht = true;
+		}
+		spielerName = br.readLine();
+		return null;
+	}
 
     public void ausgabeKartenSet() {
         // Ausgabe Kartenset
