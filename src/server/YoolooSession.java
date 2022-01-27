@@ -4,8 +4,11 @@
 
 package server;
 
+import java.util.ArrayList;
+
 import common.YoolooKarte;
 import common.YoolooKartenspiel;
+import common.YoolooSpieler;
 import common.YoolooStich;
 import server.YoolooServer.GameMode;
 
