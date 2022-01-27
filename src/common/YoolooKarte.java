@@ -32,5 +32,9 @@ public class YoolooKarte implements Serializable {
 	public String toString() {
 		return "YoolooKarte [farbe=" + farbe + ", wert=" + wert + "]";
 	}
-
+	
+	public void setWert(int neuerWert)
+	{
+		wert = neuerWert;
+	}
 }

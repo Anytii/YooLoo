@@ -35,7 +35,9 @@ public class YoolooServer {
 	private ArrayList<YoolooClientHandler> clientHandlerList;
 
 	private ExecutorService spielerPool;
-
+	
+	public boolean RulesEnabled = true;
+	
 	/**
 	 * Serverseitig durch ClientHandler angebotenen SpielModi. Bedeutung der
 	 * einzelnen Codes siehe Inlinekommentare.

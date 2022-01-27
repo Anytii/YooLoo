@@ -17,12 +17,16 @@ public class YoolooSpieler implements Serializable {
     private int clientHandlerId = -1;
     private int punkte;
     private YoolooKarte[] aktuelleSortierung;
+    private int Cheatversuche;
+	  private boolean sollCheaten;
 
     public YoolooSpieler(String name, int maxKartenWert) {
         this.name = name;
         this.punkte = 0;
         this.spielfarbe = null;
         this.aktuelleSortierung = new YoolooKarte[maxKartenWert];
+      	this.Cheatversuche = 0;
+		    this.sollCheaten = false;
     }
 
 
@@ -33,7 +37,27 @@ public class YoolooSpieler implements Serializable {
         } else {
             aktuelleSortierung = strategies.Strategies.genStratAI(this.aktuelleSortierung, this.name);
         }
+        if(sollCheaten){
+          cheaten();
+        }
     }
+  
+    /**
+	   * Es wird ein Kartenwert der aktuellen Sortierung unter 4 mit einem zuf�lligen Wert zwischen zwischen 8-10 ausgetauscht.
+	   * Somit wird eine Karte doppelt ausgespielt.
+	   */
+	  public void cheaten()
+  	{		
+		  for(int i = 0; i < aktuelleSortierung.length; i++)
+		  {
+		  	if(aktuelleSortierung[i].getWert() <=3)
+		  	{
+			  	int neuerWert = 8 + (int)(Math.random() * ((10 - 8) + 1));
+			  	aktuelleSortierung[i].setWert(neuerWert);
+		  		break;			
+		  	}
+		  }
+	  }
 
 
     public int erhaeltPunkte(int neuePunkte) {
@@ -93,5 +117,19 @@ public class YoolooSpieler implements Serializable {
         System.out.println(stich.toString());
 
     }
-
+  
+    public void increaseCheatversuche()
+	  {
+		  Cheatversuche++;
+	  }
+	
+	  public int getCheatversuche()
+	  {
+		  return Cheatversuche;
+	  }
+	
+	  public void setSollCheaten(boolean neuSollCheaten)
+	  {
+		  sollCheaten = neuSollCheaten;
+	  }
 }

@@ -88,6 +88,11 @@ public class YoolooClient {
 					break;
 				case SERVERMESSAGE_SORT_CARD_SET:
 					// sortieren Karten
+					// start lze
+					// Zum Testen kann eingestellt werden, dass der Spieler cheaten soll.
+					// Dadurch wird die Funktion meinSpieler.sortierungFestlegen() beeinflusst.
+					//meinSpieler.setSollCheaten(true);
+					// stop lze
 					meinSpieler.sortierungFestlegen();
 					ausgabeKartenSet();
 					// ggfs. Spielverlauf löschen
