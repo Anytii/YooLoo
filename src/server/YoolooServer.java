@@ -15,11 +15,12 @@ import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 import common.YoolooKartenspiel;
+import logging.Logging;
 
 public class YoolooServer {
 
 	private List<Map<String, Object>> spielerListe = new ArrayList<>();
-	private Logger LOGGER = new logging.Logging(YoolooServer.class.getName()).getLogger();
+	private static final transient Logging LOGGER = new logging.Logging(YoolooServer.class.getName());
 
 	// Server Standardwerte koennen ueber zweite Konstruktor modifiziert werden!
 	private int port = 44137;
@@ -71,7 +72,7 @@ public class YoolooServer {
 			serverSocket = new ServerSocket(port);
 			spielerPool = Executors.newCachedThreadPool();
 			clientHandlerList = new ArrayList<YoolooClientHandler>();
-			LOGGER.info("Server gestartet - warte auf Spieler");
+			LOGGER.log("Server gestartet - warte auf Spieler");
 
 			Spielerdaten.datenLaden();
 			while (serverAktiv) {
@@ -82,9 +83,9 @@ public class YoolooServer {
 					client = serverSocket.accept();
 					YoolooClientHandler clientHandler = new YoolooClientHandler(this, client);
 					clientHandlerList.add(clientHandler);
-					LOGGER.info("[YoolooServer] Anzahl verbundene Spieler: " + clientHandlerList.size());
+					LOGGER.log("[YoolooServer] Anzahl verbundene Spieler: " + clientHandlerList.size());
 				} catch (IOException e) {
-					LOGGER.info("Client Verbindung gescheitert");
+					LOGGER.log("Client Verbindung gescheitert");
 					e.printStackTrace();
 				}
 
@@ -107,7 +108,7 @@ public class YoolooServer {
 				}
 			}
 		} catch (IOException e1) {
-			LOGGER.info("ServerSocket nicht gebunden");
+			LOGGER.log("ServerSocket nicht gebunden");
 			serverAktiv = false;
 			e1.printStackTrace();
 		}
@@ -118,10 +119,10 @@ public class YoolooServer {
 	public void shutDownServer(int code) {
 		if (code == 543210) {
 			this.serverAktiv = false;
-			LOGGER.info("Server wird beendet");
+			LOGGER.log("Server wird beendet");
 			spielerPool.shutdown();
 		} else {
-			LOGGER.info("Servercode falsch");
+			LOGGER.log("Servercode falsch");
 		}
 	}
 }

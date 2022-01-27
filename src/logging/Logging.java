@@ -10,7 +10,7 @@ import java.util.logging.SimpleFormatter;
 
 public class Logging implements Serializable{
 
-    private Logger LOGGER=null;
+    private static transient Logger LOGGER=null;
 
     public Logging(String className){
         try {
@@ -28,8 +28,8 @@ public class Logging implements Serializable{
         }
     }
 
-    public Logger getLogger(){
-        return this.LOGGER;
+    public void log(String msg){
+        LOGGER.info(msg);
     }
 
 }

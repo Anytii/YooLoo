@@ -26,7 +26,7 @@ import messages.ServerMessage;
 
 public class YoolooClient {
 
-    private static Logger LOGGER = new Logging(YoolooClient.class.getName()).getLogger();
+    private static final transient Logging LOGGER = new Logging(YoolooClient.class.getName());
 
     private String serverHostname = "localhost";
     private int serverPort = 44137;
@@ -67,7 +67,7 @@ public class YoolooClient {
             while (clientState != ClientState.CLIENTSTATE_DISCONNECTED && ois != null && oos != null) {
                 // 1. Schritt Kommado empfangen
                 ServerMessage kommandoMessage = empfangeKommando();
-                LOGGER.info("[id-x]ClientStatus: " + clientState + "] " + kommandoMessage.toString());
+                LOGGER.log("[id-x]ClientStatus: " + clientState + "] " + kommandoMessage.toString());
                 // 2. Schritt ClientState ggfs aktualisieren (fuer alle neuen Kommandos)
                 ClientState newClientState = kommandoMessage.getNextClientState();
                 if (newClientState != null) {
@@ -86,7 +86,7 @@ public class YoolooClient {
                         }
                         // Client meldet den Spieler an den Server
                         oos.writeObject(newLogin);
-                        LOGGER.info("[id-x]ClientStatus: " + clientState + "] : LoginMessage fuer  " + spielerName
+                        LOGGER.log("[id-x]ClientStatus: " + clientState + "] : LoginMessage fuer  " + spielerName
                                 + " an server gesendet warte auf Spielerdaten");
                         empfangeSpieler();
                         // ausgabeKartenSet();
@@ -114,10 +114,10 @@ public class YoolooClient {
                         spieleStich(kommandoMessage.getParamInt());
                         break;
                     case SERVERMESSAGE_RESULT_SET:
-                        LOGGER.info("[id-" + meinSpieler.getClientHandlerId() + "]ClientStatus: " + clientState
+                        LOGGER.log("[id-" + meinSpieler.getClientHandlerId() + "]ClientStatus: " + clientState
                                 + "] : Ergebnis ausgeben ");
                         String ergebnis = empfangeErgebnis();
-                        LOGGER.info(ergebnis.toString());
+                        LOGGER.log(ergebnis.toString());
                         break;
                     // basic version: wechsel zu ClientState Disconnected thread beenden
                     case SERVERMESSAGE_CHANGE_STATE:
@@ -129,9 +129,9 @@ public class YoolooClient {
             }
         } catch (UnknownHostException e) {
             //e.printStackTrace();
-            LOGGER.info(e.toString());
+            LOGGER.log(e.toString());
         } catch (IOException e) {
-            LOGGER.info(e.toString());
+            LOGGER.log(e.toString());
         	//e.printStackTrace();
         }
     }
@@ -149,29 +149,29 @@ public class YoolooClient {
             try {
                 serverSocket = new Socket(serverHostname, serverPort);
             } catch (ConnectException e) {
-                LOGGER.info("Server antwortet nicht - ggfs. neu starten");
+                LOGGER.log("Server antwortet nicht - ggfs. neu starten");
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e1) {
                 }
             }
         }
-        LOGGER.info("[Client] Serversocket eingerichtet: " + serverSocket.toString());
+        LOGGER.log("[Client] Serversocket eingerichtet: " + serverSocket.toString());
         // Kommunikationskanuele einrichten
         ois = new ObjectInputStream(serverSocket.getInputStream());
         oos = new ObjectOutputStream(serverSocket.getOutputStream());
     }
 
     private void spieleStich(int stichNummer) throws IOException {
-        LOGGER.info("[id-" + meinSpieler.getClientHandlerId() + "]ClientStatus: " + clientState
+        LOGGER.log("[id-" + meinSpieler.getClientHandlerId() + "]ClientStatus: " + clientState
                 + "] : Spiele Karte " + stichNummer);
         spieleKarteAus(stichNummer);
         YoolooStich iStich = empfangeStich();
         spielVerlauf[stichNummer] = iStich;
-        LOGGER.info("[id-" + meinSpieler.getClientHandlerId() + "]ClientStatus: " + clientState
+        LOGGER.log("[id-" + meinSpieler.getClientHandlerId() + "]ClientStatus: " + clientState
                 + "] : Empfange Stich " + iStich);
         if (iStich.getSpielerNummer() == meinSpieler.getClientHandlerId()) {
-            LOGGER.info("[id-" + meinSpieler.getClientHandlerId() + "]ClientStatus: " + clientState + "] : Gewonnen - " +
+            LOGGER.log("[id-" + meinSpieler.getClientHandlerId() + "]ClientStatus: " + clientState + "] : Gewonnen - " +
                     meinSpieler.erhaeltPunkte(iStich.getStichNummer() + 1));
         }
 
@@ -189,11 +189,11 @@ public class YoolooClient {
             kommando = (ServerMessage) ois.readObject();
         } catch (ClassNotFoundException e) {
             failed = true;
-            LOGGER.info(e.toString());
+            LOGGER.log(e.toString());
             //e.printStackTrace();
         } catch (IOException e) {
             failed = true;
-            LOGGER.info(e.toString());
+            LOGGER.log(e.toString());
             //e.printStackTrace();
         }
         if (failed)
@@ -205,7 +205,7 @@ public class YoolooClient {
         try {
             meinSpieler = (YoolooSpieler) ois.readObject();
         } catch (ClassNotFoundException | IOException e) {
-            LOGGER.info(e.toString());
+            LOGGER.log(e.toString());
         	//e.printStackTrace();
         }
     }
@@ -214,7 +214,7 @@ public class YoolooClient {
         try {
             return (YoolooStich) ois.readObject();
         } catch (ClassNotFoundException | IOException e) {
-        	LOGGER.info(e.toString());
+        	LOGGER.log(e.toString());
         	//e.printStackTrace();
         }
         return null;
@@ -224,7 +224,7 @@ public class YoolooClient {
         try {
             return (String) ois.readObject();
         } catch (ClassNotFoundException | IOException e) {
-        	LOGGER.info(e.toString());
+        	LOGGER.log(e.toString());
         	//e.printStackTrace();
         }
         return null;
@@ -245,10 +245,10 @@ public class YoolooClient {
 
     public void ausgabeKartenSet() {
         // Ausgabe Kartenset
-        LOGGER.info("[id-" + meinSpieler.getClientHandlerId() + "]ClientStatus: " + clientState
+        LOGGER.log("[id-" + meinSpieler.getClientHandlerId() + "]ClientStatus: " + clientState
                 + "] : Uebermittelte Kartensortierung beim Login ");
         for (int i = 0; i < meinSpieler.getAktuelleSortierung().length; i++) {
-            LOGGER.info("[id-" + meinSpieler.getClientHandlerId() + "]ClientStatus: " + clientState
+            LOGGER.log("[id-" + meinSpieler.getClientHandlerId() + "]ClientStatus: " + clientState
                     + "] : Karte " + (i + 1) + ":" + meinSpieler.getAktuelleSortierung()[i]);
         }
 

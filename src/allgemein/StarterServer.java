@@ -12,14 +12,14 @@ import java.util.logging.Logger;
 
 public class StarterServer {
 
-	private static Logger LOGGER = new Logging(StarterServer.class.getName()).getLogger();
+	private static final transient Logging LOGGER = new Logging(StarterServer.class.getName());
 
 
 	public static void main(String[] args) {
 		int listeningPort = 44137;
 		int spieleranzahl = 2; // min 1, max Anzahl definierte Farben in Enum YoolooKartenSpiel.KartenFarbe)
 		YoolooServer server = new YoolooServer(listeningPort, spieleranzahl, GameMode.GAMEMODE_SINGLE_GAME);
-		LOGGER.info("Server wird gestartet ...");
+		LOGGER.log("Server wird gestartet ...");
 		server.startServer();
 	}
 

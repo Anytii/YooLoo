@@ -4,13 +4,15 @@
 
 package common;
 
+import logging.Logging;
+
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
 
 public class YoolooKartenspiel {
 
-	private static Logger LOGGER = new logging.Logging(YoolooKartenspiel.class.getName()).getLogger();
+	private static final transient Logging LOGGER = new logging.Logging(YoolooKartenspiel.class.getName());
 	
 	public enum Kartenfarbe {
 		Gelb, Rot, Gruen, Blau, Orange, Pink, Violett, Tuerkis
@@ -35,7 +37,7 @@ public class YoolooKartenspiel {
 	public YoolooKartenspiel() {
 
 		setSpielname("Yooloo" + System.currentTimeMillis());
-		LOGGER.info("[YoolooKartenSpiel] Spielname: " + getSpielname()); // TODO evtl loeschen
+		LOGGER.log("[YoolooKartenSpiel] Spielname: " + getSpielname()); // TODO evtl loeschen
 
 		spielerliste.clear();
 		spielkarten = new YoolooKarte[anzahlFarben][anzahlWerte];
@@ -45,15 +47,15 @@ public class YoolooKartenspiel {
 				spielkarten[farbe][wert] = new YoolooKarte(Kartenfarbe.values()[farbe], (wert + 1));
 			}
 		}
-		LOGGER.info("Je " + anzahlWerte + " Spielkarten fuer " + anzahlFarben + " Spieler zeugt");
+		LOGGER.log("Je " + anzahlWerte + " Spielkarten fuer " + anzahlFarben + " Spieler zeugt");
 	}
 
 	public void listeSpielstand() {
 		if (spielerliste.isEmpty()) {
-			LOGGER.info("(Noch) Keine Spieler registriert");
+			LOGGER.log("(Noch) Keine Spieler registriert");
 		} else {
 			for (YoolooSpieler yoolooSpieler : spielerliste) {
-				LOGGER.info(yoolooSpieler.toString());
+				LOGGER.log(yoolooSpieler.toString());
 			}
 		}
 
@@ -73,7 +75,7 @@ public class YoolooKartenspiel {
 		YoolooKarte[] spielerkarten = spielkarten[spielerliste.size()];
 		neuerSpieler.setAktuelleSortierung(spielerkarten);
 		this.spielerliste.add(neuerSpieler);
-		LOGGER.info("Debug; Spieler " + name + " registriert als : " + neuerSpieler);
+		LOGGER.log("Debug; Spieler " + name + " registriert als : " + neuerSpieler);
 		return neuerSpieler;
 	}
 
@@ -94,7 +96,7 @@ public class YoolooKartenspiel {
 		YoolooKarte[] kartenDesSpielers = spielkarten[neuerSpieler.getClientHandlerId()];
 		neuerSpieler.setAktuelleSortierung(kartenDesSpielers);
 		this.spielerliste.add(neuerSpieler); // nur fuer Simulation noetig!
-		LOGGER.info("Debug; Spielerobject registriert als : " + neuerSpieler);
+		LOGGER.log("Debug; Spielerobject registriert als : " + neuerSpieler);
 		return neuerSpieler;
 	}
 
@@ -115,14 +117,14 @@ public class YoolooKartenspiel {
 	public void spieleRunden() {
 		// Schleife ueber Anzahl der Karten
 		for (int i = 0; i < anzahlWerte; i++) {
-			LOGGER.info("Runde " + (i + 1));
+			LOGGER.log("Runde " + (i + 1));
 			// Schleife ueber Anzahl der Spieler
 			YoolooKarte[] stich = new YoolooKarte[spielerliste.size()];
 
 			for (int j = 0; j < spielerliste.size(); j++) {
 				YoolooKarte aktuelleKarte = spielerliste.get(j).getAktuelleSortierung()[i];
 				stich[j] = aktuelleKarte;
-				LOGGER.info(spielerliste.get(j).getName() + " spielt " + aktuelleKarte.toString());
+				LOGGER.log(spielerliste.get(j).getName() + " spielt " + aktuelleKarte.toString());
 			}
 			int stichgewinner = berechneGewinnerIndex(stich);
 			if (stichgewinner>=0) {
@@ -138,7 +140,7 @@ public class YoolooKartenspiel {
 		int maxWert = 0;
 		int anzahlKartenMitMaxWert = 0;
 		for (int i = 0; i < karten.length; i++) {
-			LOGGER.info(i + ":" + karten[i].getWert() + " \n");
+			LOGGER.log(i + ":" + karten[i].getWert() + " \n");
 		}
 		while (anzahlKartenMitMaxWert != 1) {
 			maxWert = 0;
@@ -173,7 +175,7 @@ public class YoolooKartenspiel {
 	public int berechneGewinnerIndex(YoolooKarte[] karten) {
 		int maxwert = 0;
 		for (int i = 0; i < karten.length; i++) {
-			LOGGER.info(i + ":" + karten[i].getWert() + " ");
+			LOGGER.log(i + ":" + karten[i].getWert() + " ");
 			if (maxwert < karten[i].getWert())
 				maxwert = karten[i].getWert();
 		}
@@ -191,11 +193,11 @@ public class YoolooKartenspiel {
 				gewinnerIndex = -1;
 
 			} else {
-				LOGGER.info("gewinnerIndex: " + gewinnerIndex);
+				LOGGER.log("gewinnerIndex: " + gewinnerIndex);
 				return gewinnerIndex;
 			}
 		}
-		LOGGER.info("Kein gewinnerIndex: ermittelt" + gewinnerIndex);
+		LOGGER.log("Kein gewinnerIndex: ermittelt" + gewinnerIndex);
 		return gewinnerIndex;
 	}
 	

@@ -9,10 +9,12 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 
 import common.YoolooKartenspiel.Kartenfarbe;
+import logging.Logging;
 
 public class YoolooSpieler implements Serializable {
 
-	private Logger LOGGER = new logging.Logging(YoolooSpieler.class.getName()).getLogger();
+	private static final transient Logging LOGGER = new logging.Logging(YoolooSpieler.class.getName());
+
 
     private static final long serialVersionUID = 376078630788146549L;
     private String name;
@@ -64,9 +66,9 @@ public class YoolooSpieler implements Serializable {
 
 
     public int erhaeltPunkte(int neuePunkte) {
-		LOGGER.info(name + " hat " + punkte + " P - erhaelt " + neuePunkte + " P - neue Summe: ");
-		this.punkte = this.punkte + neuePunkte;
-		LOGGER.info(this.punkte+"");
+	      int tmppunkt = this.punkte;
+        this.punkte = this.punkte + neuePunkte;
+		LOGGER.log(name + " hat " + tmppunkt + " P - erhaelt " + neuePunkte + " P - neue Summe: "+this.punkte+" P");
 		return this.punkte;
 	}
 
@@ -117,7 +119,7 @@ public class YoolooSpieler implements Serializable {
     }
 
     public void stichAuswerten(YoolooStich stich) {
-        LOGGER.info(stich.toString());
+        LOGGER.log(stich.toString());
     }
   
     public void increaseCheatversuche()

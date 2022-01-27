@@ -23,6 +23,7 @@ import common.YoolooKartenspiel;
 import common.YoolooRegeln;
 import common.YoolooSpieler;
 import common.YoolooStich;
+import logging.Logging;
 import messages.ClientMessage;
 import messages.ServerMessage;
 import messages.ServerMessage.ServerMessageResult;
@@ -30,7 +31,7 @@ import messages.ServerMessage.ServerMessageType;
 
 public class YoolooClientHandler extends Thread {
 
-	private Logger LOGGER = new logging.Logging(YoolooClientHandler.class.getName()).getLogger();
+	private static final transient Logging LOGGER = new logging.Logging(YoolooClientHandler.class.getName());
 
 	private final static int delay = 100;
 
@@ -89,7 +90,7 @@ public class YoolooClientHandler extends Thread {
 				antwortObject = empfangeVomClient();
 				if (antwortObject instanceof ClientMessage) {
 					ClientMessage message = (ClientMessage) antwortObject;
-					LOGGER.info("[ClientHandler" + clientHandlerId + "] Nachricht Vom Client: " + message);
+					LOGGER.log("[ClientHandler" + clientHandlerId + "] Nachricht Vom Client: " + message);
 				}
 				List<Integer> aktuelleSortierung = new ArrayList<>();
 				switch (state) {
@@ -122,7 +123,7 @@ public class YoolooClientHandler extends Thread {
 							// Neue YoolooKarte in Session ausspielen und Stich abfragen
 							YoolooKarte neueKarte = (YoolooKarte) empfangeVomClient();
 							aktuelleSortierung.add(neueKarte.getWert());
-							LOGGER.info("[ClientHandler" + clientHandlerId + "] Karte empfangen:" + neueKarte);
+							LOGGER.log("[ClientHandler" + clientHandlerId + "] Karte empfangen:" + neueKarte);
 							//Start lze
 							//Hier wird die Überprüfung der Regel aufgerufen, und bei einem Verstoß der Regel der Kartenwert von neueKarte auf 0 gesetzt.
 							//Im Anschluss wird die Karte dem aktuellen Stich hinzugefügt und die Karte der Liste der gespielten Karten hinzugefügt.
@@ -134,7 +135,7 @@ public class YoolooClientHandler extends Thread {
 							if (currentstich.getSpielerNummer() == clientHandlerId) {
 								meinSpieler.erhaeltPunkte(stichNummer + 1);
 							}
-							LOGGER.info("[ClientHandler" + clientHandlerId + "] Stich " + stichNummer
+							LOGGER.log("[ClientHandler" + clientHandlerId + "] Stich " + stichNummer
 									+ " wird gesendet: " + currentstich.toString());
 							// Stich an Client uebermitteln
 							oos.writeObject(currentstich);
@@ -142,7 +143,7 @@ public class YoolooClientHandler extends Thread {
 						this.state = ServerState.ServerState_DISCONNECT;
 						break;
 					default:
-						LOGGER.info("[ClientHandler" + clientHandlerId + "] GameMode nicht implementiert");
+						LOGGER.log("[ClientHandler" + clientHandlerId + "] GameMode nicht implementiert");
 						this.state = ServerState.ServerState_DISCONNECT;
 						break;
 					}
@@ -156,19 +157,19 @@ public class YoolooClientHandler extends Thread {
 					this.state = ServerState.ServerState_DISCONNECTED;
 					break;
 				default:
-					LOGGER.info("Undefinierter Serverstatus - tue mal nichts!");
+					LOGGER.log("Undefinierter Serverstatus - tue mal nichts!");
 				}
 			}
 		} catch (EOFException e) {
-			LOGGER.info(e.toString());
+			LOGGER.log(e.toString());
 			//System.err.println(e);
 			e.printStackTrace();
 		} catch (IOException e) {
-			LOGGER.info(e.toString());
+			LOGGER.log(e.toString());
 			//System.err.println(e);
 			e.printStackTrace();
 		} finally {
-			LOGGER.info("[ClientHandler" + clientHandlerId + "] Verbindung zu " + socketAddress + " beendet");
+			LOGGER.log("[ClientHandler" + clientHandlerId + "] Verbindung zu " + socketAddress + " beendet");
 		}
 
 	}
@@ -177,24 +178,24 @@ public class YoolooClientHandler extends Thread {
 			ServerMessageResult serverMessageResult, int paramInt) throws IOException {
 		ServerMessage kommandoMessage = new ServerMessage(serverMessageType, clientState, serverMessageResult,
 				paramInt);
-		LOGGER.info("[ClientHandler" + clientHandlerId + "] Sende Kommando: " + kommandoMessage.toString());
+		LOGGER.log("[ClientHandler" + clientHandlerId + "] Sende Kommando: " + kommandoMessage.toString());
 		oos.writeObject(kommandoMessage);
 	}
 
 	private void sendeKommando(ServerMessageType serverMessageType, ClientState clientState,
 			ServerMessageResult serverMessageResult) throws IOException {
 		ServerMessage kommandoMessage = new ServerMessage(serverMessageType, clientState, serverMessageResult);
-		LOGGER.info("[ClientHandler" + clientHandlerId + "] Sende Kommando: " + kommandoMessage.toString());
+		LOGGER.log("[ClientHandler" + clientHandlerId + "] Sende Kommando: " + kommandoMessage.toString());
 		oos.writeObject(kommandoMessage);
 	}
 
 	private void verbindeZumClient() throws IOException {
 		oos = new ObjectOutputStream(clientSocket.getOutputStream());
 		ois = new ObjectInputStream(clientSocket.getInputStream());
-		LOGGER.info("[ClientHandler  " + clientHandlerId + "] Starte ClientHandler fuer: "
+		LOGGER.log("[ClientHandler  " + clientHandlerId + "] Starte ClientHandler fuer: "
 				+ clientSocket.getInetAddress() + ":->" + clientSocket.getPort());
 		socketAddress = clientSocket.getRemoteSocketAddress();
-		LOGGER.info("[ClientHandler" + clientHandlerId + "] Verbindung zu " + socketAddress + " hergestellt");
+		LOGGER.log("[ClientHandler" + clientHandlerId + "] Verbindung zu " + socketAddress + " hergestellt");
 		oos.flush();
 	}
 
@@ -205,19 +206,19 @@ public class YoolooClientHandler extends Thread {
 			return antwortObject;
 		} catch (EOFException eofe) {
 			eofe.printStackTrace();
-			LOGGER.info(eofe.toString());
+			LOGGER.log(eofe.toString());
 		} catch (ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
-			LOGGER.info(cnfe.toString());
+			LOGGER.log(cnfe.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
-			LOGGER.info(e.toString());
+			LOGGER.log(e.toString());
 		}
 		return null;
 	}
 
 	private boolean registriereSpielerInSession(YoolooSpieler meinSpieler) {
-		System.out.println("[ClientHandler" + clientHandlerId + "] registriereSpielerInSession " + meinSpieler.getName());
+		LOGGER.log("[ClientHandler" + clientHandlerId + "] registriereSpielerInSession " + meinSpieler.getName());
 		YoolooSpieler spieler = session.getAktuellesSpiel().spielerRegistrieren(meinSpieler);
 		return spieler != null;
 	}
@@ -233,17 +234,17 @@ public class YoolooClientHandler extends Thread {
 	 */
 	private YoolooStich spieleKarte(int stichNummer, YoolooKarte empfangeneKarte) {
 		YoolooStich aktuellerStich = null;
-		LOGGER.info("[ClientHandler" + clientHandlerId + "] spiele Stich Nr: " + stichNummer
+		LOGGER.log("[ClientHandler" + clientHandlerId + "] spiele Stich Nr: " + stichNummer
 				+ " KarteKarte empfangen: " + empfangeneKarte.toString());
 		session.spieleKarteAus(clientHandlerId, stichNummer, empfangeneKarte);
 		// ausgabeSpielplan(); // Fuer Debuginformationen sinnvoll
 		while (aktuellerStich == null) {
 			try {
-				LOGGER.info("[ClientHandler" + clientHandlerId + "] warte " + delay + " ms ");
+				LOGGER.log("[ClientHandler" + clientHandlerId + "] warte " + delay + " ms ");
 				Thread.sleep(delay);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-				LOGGER.info(e.toString());
+				LOGGER.log(e.toString());
 			}
 			aktuellerStich = session.stichFuerRundeAuswerten(stichNummer);
 		}
@@ -251,16 +252,16 @@ public class YoolooClientHandler extends Thread {
 	}
 
 	public void setHandlerID(int clientHandlerId) {
-		LOGGER.info("[ClientHandler" + clientHandlerId + "] clientHandlerId " + clientHandlerId);
+		LOGGER.log("[ClientHandler" + clientHandlerId + "] clientHandlerId " + clientHandlerId);
 		this.clientHandlerId = clientHandlerId;
 
 	}
 
 	public void ausgabeSpielplan() {
-		LOGGER.info("Aktueller Spielplan");
+		LOGGER.log("Aktueller Spielplan");
 		for (int i = 0; i < session.getSpielplan().length; i++) {
 			for (int j = 0; j < session.getSpielplan()[i].length; j++) {
-				LOGGER.info("[ClientHandler" + clientHandlerId + "][i]:" + i + " [j]:" + j + " Karte: "
+				LOGGER.log("[ClientHandler" + clientHandlerId + "][i]:" + i + " [j]:" + j + " Karte: "
 						+ session.getSpielplan()[i][j]);
 			}
 		}
@@ -274,7 +275,7 @@ public class YoolooClientHandler extends Thread {
 	 * @param session
 	 */
 	public void joinSession(YoolooSession session) {
-		LOGGER.info("[ClientHandler" + clientHandlerId + "] joinSession " + session.toString());
+		LOGGER.log("[ClientHandler" + clientHandlerId + "] joinSession " + session.toString());
 		this.session = session;
 
 	}

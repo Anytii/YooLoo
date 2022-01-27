@@ -85,7 +85,9 @@ public class Statistikmodul {
 			writer.write(obj.toJSONString());
 			writer.close();
 			for (int i = 0; i < Clienthandlerlist.size(); i++) {
-				create_stats(Clienthandlerlist.get(i).getPlayer().getName());
+				if(Clienthandlerlist.get(i).getPlayer()!=null) {
+					create_stats(Clienthandlerlist.get(i).getPlayer().getName());
+				}
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -241,13 +243,17 @@ public class Statistikmodul {
 		List<Integer> score = new ArrayList<>();
 		ArrayList<YoolooClientHandler> player_map = new ArrayList<>();
 		for (int i = 0; i < Clienthandlerlist.size(); i++) {
-			score.add(Clienthandlerlist.get(i).getPlayer().getPunkte());
+			if(Clienthandlerlist.get(i).getPlayer()!=null) {
+				score.add(Clienthandlerlist.get(i).getPlayer().getPunkte());
+			}
 		}
 		Collections.sort(score, Collections.reverseOrder());
 		for (int j = 0; j < score.size(); j++) {
 			for (int i = 0; i < Clienthandlerlist.size(); i++) {
-				if (Clienthandlerlist.get(i).getPlayer().getPunkte() == score.get(j)) {
-					player_map.add(Clienthandlerlist.get(i));
+				if((Clienthandlerlist.get(i).getPlayer()!=null)) {
+					if (Clienthandlerlist.get(i).getPlayer().getPunkte() == score.get(j)) {
+						player_map.add(Clienthandlerlist.get(i));
+					}
 				}
 			}
 
@@ -321,10 +327,12 @@ public class Statistikmodul {
 		String result = "";
 		int points = 0;
 		for (int i = 0; i < Clienthandlerlist.size(); i++) {
-			YoolooSpieler player = Clienthandlerlist.get(i).getPlayer();
-			if (player.getPunkte() > points) {
-				points = player.getPunkte();
-				result = player.getName();
+			if(Clienthandlerlist.get(i).getPlayer()!=null) {
+				YoolooSpieler player = Clienthandlerlist.get(i).getPlayer();
+				if (player.getPunkte() > points) {
+					points = player.getPunkte();
+					result = player.getName();
+				}
 			}
 		}
 
