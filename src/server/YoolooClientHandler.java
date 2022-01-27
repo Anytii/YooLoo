@@ -160,10 +160,12 @@ public class YoolooClientHandler extends Thread {
 				}
 			}
 		} catch (EOFException e) {
-			System.err.println(e);
+			LOGGER.info(e.toString());
+			//System.err.println(e);
 			e.printStackTrace();
 		} catch (IOException e) {
-			System.err.println(e);
+			LOGGER.info(e.toString());
+			//System.err.println(e);
 			e.printStackTrace();
 		} finally {
 			LOGGER.info("[ClientHandler" + clientHandlerId + "] Verbindung zu " + socketAddress + " beendet");
@@ -203,10 +205,13 @@ public class YoolooClientHandler extends Thread {
 			return antwortObject;
 		} catch (EOFException eofe) {
 			eofe.printStackTrace();
+			LOGGER.info(eofe.toString());
 		} catch (ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
+			LOGGER.info(cnfe.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
+			LOGGER.info(e.toString());
 		}
 		return null;
 	}
@@ -238,6 +243,7 @@ public class YoolooClientHandler extends Thread {
 				Thread.sleep(delay);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+				LOGGER.info(e.toString());
 			}
 			aktuellerStich = session.stichFuerRundeAuswerten(stichNummer);
 		}

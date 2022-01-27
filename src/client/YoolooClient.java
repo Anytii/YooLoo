@@ -128,9 +128,11 @@ public class YoolooClient {
                 }
             }
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            LOGGER.info(e.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.info(e.toString());
+        	//e.printStackTrace();
         }
     }
 
@@ -187,10 +189,12 @@ public class YoolooClient {
             kommando = (ServerMessage) ois.readObject();
         } catch (ClassNotFoundException e) {
             failed = true;
-            e.printStackTrace();
+            LOGGER.info(e.toString());
+            //e.printStackTrace();
         } catch (IOException e) {
             failed = true;
-            e.printStackTrace();
+            LOGGER.info(e.toString());
+            //e.printStackTrace();
         }
         if (failed)
             kommando = null;
@@ -201,7 +205,8 @@ public class YoolooClient {
         try {
             meinSpieler = (YoolooSpieler) ois.readObject();
         } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+            LOGGER.info(e.toString());
+        	//e.printStackTrace();
         }
     }
 
@@ -209,7 +214,8 @@ public class YoolooClient {
         try {
             return (YoolooStich) ois.readObject();
         } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+        	LOGGER.info(e.toString());
+        	//e.printStackTrace();
         }
         return null;
     }
@@ -218,7 +224,8 @@ public class YoolooClient {
         try {
             return (String) ois.readObject();
         } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+        	LOGGER.info(e.toString());
+        	//e.printStackTrace();
         }
         return null;
     }

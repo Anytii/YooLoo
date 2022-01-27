@@ -1,6 +1,7 @@
 package strategies;
 
 import common.YoolooKarte;
+import server.YoolooClientHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +11,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class Strategies {
+	
+	private static Logger LOGGER = new logging.Logging(YoolooClientHandler.class.getName()).getLogger();
 
     public static YoolooKarte[] genStratAI(YoolooKarte[] oldSort, String name) {
         if (!Files.notExists(Path.of(name + ".txt"))) {
@@ -39,10 +43,11 @@ public class Strategies {
                 writer.close();
 
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.info(e.getStackTrace().toString());
                 genStratRandom(oldSort, name);
             }
-            System.out.println(newSort);
+           // System.out.println(newSort);
+            LOGGER.info(newSort.toString());
             return newSort;
         } else {
             return genStratRandom(oldSort, name);
