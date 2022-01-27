@@ -18,6 +18,7 @@ import client.YoolooClient.ClientState;
 import common.LoginMessage;
 import common.YoolooKarte;
 import common.YoolooKartenspiel;
+import common.YoolooRegeln;
 import common.YoolooSpieler;
 import common.YoolooStich;
 import messages.ClientMessage;
@@ -43,12 +44,15 @@ public class YoolooClientHandler extends Thread {
 	private YoolooSession session;
 	private YoolooSpieler meinSpieler = null;
 	private int clientHandlerId;
+	
+	private YoolooRegeln meineRegeln;
 
 	public YoolooClientHandler(YoolooServer yoolooServer, Socket clientSocket) {
 		this.myServer = yoolooServer;
 		myServer.toString();
 		this.clientSocket = clientSocket;
 		this.state = ServerState.ServerState_NULL;
+		this.meineRegeln  = new YoolooRegeln();
 	}
 
 	/**
@@ -110,7 +114,13 @@ public class YoolooClientHandler extends Thread {
 							// Neue YoolooKarte in Session ausspielen und Stich abfragen
 							YoolooKarte neueKarte = (YoolooKarte) empfangeVomClient();
 							LOGGER.info("[ClientHandler" + clientHandlerId + "] Karte empfangen:" + neueKarte);
+							//Start lze
+							//Hier wird die Überprüfung der Regel aufgerufen, und bei einem Verstoß der Regel der Kartenwert von neueKarte auf 0 gesetzt.
+							//Im Anschluss wird die Karte dem aktuellen Stich hinzugefügt und die Karte der Liste der gespielten Karten hinzugefügt.
+							meineRegeln.ueberpruefeRegelDK(neueKarte, clientHandlerId, stichNummer, myServer.RulesEnabled, meinSpieler);
 							YoolooStich currentstich = spieleKarte(stichNummer, neueKarte);
+							meineRegeln.addGespielteKarte(neueKarte);
+							//Stop lze
 							// Punkte fuer gespielten Stich ermitteln
 							if (currentstich.getSpielerNummer() == clientHandlerId) {
 								meinSpieler.erhaeltPunkte(stichNummer + 1);

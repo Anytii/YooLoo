@@ -124,6 +124,7 @@ public class YoolooKartenspiel {
 			if (stichgewinner>=0) {
 				spielerliste.get(stichgewinner).erhaeltPunkte(i + 1);
 			}
+			
 		}
 	}
 

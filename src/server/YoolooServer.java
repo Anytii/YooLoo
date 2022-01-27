@@ -38,7 +38,9 @@ public class YoolooServer {
 	private ArrayList<YoolooClientHandler> clientHandlerList;
 
 	private ExecutorService spielerPool;
-
+	
+	public boolean RulesEnabled = true;
+	
 	/**
 	 * Serverseitig durch ClientHandler angebotenen SpielModi. Bedeutung der
 	 * einzelnen Codes siehe Inlinekommentare.
@@ -95,7 +97,7 @@ public class YoolooServer {
 						ch.joinSession(yoolooSession);
 						spielerPool.execute(ch); // Start der ClientHandlerThread - Aufruf der Methode run()
 					}
-
+					new Statistikmodul().update_history(clientHandlerList);
 					// nuechste Runde eroeffnen
 					clientHandlerList = new ArrayList<YoolooClientHandler>();
 				}

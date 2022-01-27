@@ -4,13 +4,14 @@
 
 package client;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 import allgemein.StarterServer;
 import common.LoginMessage;
@@ -88,6 +89,11 @@ public class YoolooClient {
                         break;
                     case SERVERMESSAGE_SORT_CARD_SET:
                         // sortieren Karten
+                    // start lze
+					// Zum Testen kann eingestellt werden, dass der Spieler cheaten soll.
+					// Dadurch wird die Funktion meinSpieler.sortierungFestlegen() beeinflusst.
+					//meinSpieler.setSollCheaten(true);
+					// stop lze
                         meinSpieler.sortierungFestlegen();
                         ausgabeKartenSet();
                         // ggfs. Spielverlauf löschen
@@ -236,7 +242,4 @@ public class YoolooClient {
         CLIENTSTATE_DISCONNECT, // Verbindung soll getrennt werden
         CLIENTSTATE_DISCONNECTED // Vebindung wurde getrennt
     }
-
-    ;
-
 }
