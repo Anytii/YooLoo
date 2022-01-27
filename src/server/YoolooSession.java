@@ -9,7 +9,11 @@ import common.YoolooKartenspiel;
 import common.YoolooStich;
 import server.YoolooServer.GameMode;
 
+import java.util.logging.Logger;
+
 public class YoolooSession {
+
+	private Logger LOGGER = new logging.Logging(YoolooSession.class.getName()).getLogger();
 
 	private int anzahlSpielerInRunde;
 	private GameMode gamemode = GameMode.GAMEMODE_NULL;
@@ -52,7 +56,7 @@ public class YoolooSession {
 				neuerStich.setStichNummer(stichNummer);
 				neuerStich.setSpielerNummer(aktuellesSpiel.berechneGewinnerIndex(karten));
 				ausgewerteteStiche[stichNummer] = neuerStich;
-				System.out.println("Stich ausgewertet:" + neuerStich.toString());
+				LOGGER.info("Stich ausgewertet:" + neuerStich.toString());
 			}
 		}
 		return ausgewerteteStiche[stichNummer];

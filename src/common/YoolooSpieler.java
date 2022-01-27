@@ -6,10 +6,13 @@ package common;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 import common.YoolooKartenspiel.Kartenfarbe;
 
 public class YoolooSpieler implements Serializable {
+
+	private Logger LOGGER = new logging.Logging(YoolooSpieler.class.getName()).getLogger();
 
 	private static final long serialVersionUID = 376078630788146549L;
 	private String name;
@@ -34,15 +37,15 @@ public class YoolooSpieler implements Serializable {
 				neuerIndex = (int) (Math.random() * neueSortierung.length);
 			}
 			neueSortierung[neuerIndex] = aktuelleSortierung[i];
-			// System.out.println(i+ ". neuerIndex: "+neuerIndex);
+			// LOGGER.info(i+ ". neuerIndex: "+neuerIndex);
 		}
 		aktuelleSortierung = neueSortierung;
 	}
 
 	public int erhaeltPunkte(int neuePunkte) {
-		System.out.print(name + " hat " + punkte + " P - erhaelt " + neuePunkte + " P - neue Summe: ");
+		LOGGER.info(name + " hat " + punkte + " P - erhaelt " + neuePunkte + " P - neue Summe: ");
 		this.punkte = this.punkte + neuePunkte;
-		System.out.println(this.punkte);
+		LOGGER.info(this.punkte+"");
 		return this.punkte;
 	}
 
@@ -93,7 +96,7 @@ public class YoolooSpieler implements Serializable {
 	}
 
 	public void stichAuswerten(YoolooStich stich) {
-		System.out.println(stich.toString());
+		LOGGER.info(stich.toString());
 
 	}
 
