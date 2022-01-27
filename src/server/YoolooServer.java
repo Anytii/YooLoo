@@ -36,7 +36,6 @@ public class YoolooServer {
 
 	private ExecutorService spielerPool;
 	
-	// Hier wird eingestellt, ob die Regeln eingehalten werden sollen
 	public boolean RulesEnabled = true;
 	
 	/**

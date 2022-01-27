@@ -56,7 +56,7 @@ public class YoolooSpieler implements Serializable {
 		{
 			if(aktuelleSortierung[i].getWert() <=3)
 			{
-				int neuerWert = 7 + (int)(Math.random() * ((10 - 7) + 1));
+				int neuerWert = 8 + (int)(Math.random() * ((10 - 8) + 1));
 				aktuelleSortierung[i].setWert(neuerWert);
 				break;			
 			}

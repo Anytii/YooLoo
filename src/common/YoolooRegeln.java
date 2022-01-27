@@ -10,10 +10,10 @@ public class YoolooRegeln {
 	 * Dann wird überprüft, ob eine Karte das zweite mal gelegt wurde. 
 	 * Wenn ja, erhält der Spieler für diesen Zug den Kartenwert von 0 und verliert somit automatisch den Stich.
 	 * Wenn nicht geht es normal weiter.
-	 * @param neueKarte
+	 * @param neueKarte ist die neue Spielkarte, die vom Client übergeben wurde.
 	 * @param clientHandlerId
-	 * @param stichNummer
-	 * @param isEnabled
+	 * @param stichNummer ist der Rundennummer für den aktuellen Stich.
+	 * @param isEnabled ist ein Boolean, welcher festlegt, ob die Regeleinhaltung ausgeführt werden soll. 
 	 */
 	public void ueberpruefeRegelDK(YoolooKarte neueKarte, int clientHandlerId, int stichNummer, boolean isEnabled, YoolooSpieler meinSpieler){
 		if (isEnabled) {
@@ -32,7 +32,7 @@ public class YoolooRegeln {
 	
 	/**
 	 * Es wird überprüft ob eine Karte in den bereits gespielten Karten vorhanden ist.
-	 * @param neueKarte
+	 * @param neueKarte ist die neue Spielkarte, die vom Client übergeben wurde.
 	 * @return True wenn die Karte bereits vorhanden ist, false wenn nicht.
 	 */
 	public boolean checkDoppelteKarte(YoolooKarte neueKarte)
@@ -48,7 +48,7 @@ public class YoolooRegeln {
 	}
 	/**
 	 * Die übergebene neue YoolooKarte wird der Liste der gespielten Karten eines Spielers hinzugefügt.
-	 * @param neueKarte
+	 * @param neueKarte ist die neue Spielkarte, die vom Client übergeben wurde.
 	 */
 	public void addGespielteKarte(YoolooKarte neueKarte)
 	{
@@ -56,7 +56,7 @@ public class YoolooRegeln {
 	}
 	/**
 	 * Gibt die Nummer des Stichs zurück, in welchem bereits die entsprechende doppelte Karte gelegt wurde.
-	 * @param wert
+	 * @param wert ist der Wert einer Karte für den der gespielte Stich herausgesucht werden soll.
 	 * @return Stichnummer
 	 */
 	public int getStichnummer(int wert)
