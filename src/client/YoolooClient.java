@@ -4,12 +4,13 @@
 
 package client;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 import common.LoginMessage;
 import common.YoolooKartenspiel;
@@ -21,7 +22,7 @@ import messages.ServerMessage;
 
 public class YoolooClient {
 
-	private String serverHostname = "localhost";
+	private String serverHostname = constants.Constants.getSERVERIP();
 	private int serverPort = 44137;
 	private Socket serverSocket = null;
 	private ObjectInputStream ois = null;
@@ -72,6 +73,10 @@ public class YoolooClient {
 						// TODO Klasse LoginMessage erweiteren um Interaktives ermitteln des
 						// Spielernames, GameModes, ...)
 						newLogin = eingabeSpielerDatenFuerLogin(); //Dummy aufruf
+						BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+						System.out.print("Enter Username: ");
+						String s = br.readLine();
+						spielerName = s;
 						newLogin = new LoginMessage(spielerName);
 					}
 					// Client meldet den Spieler an den Server
@@ -83,6 +88,11 @@ public class YoolooClient {
 					break;
 				case SERVERMESSAGE_SORT_CARD_SET:
 					// sortieren Karten
+					// start lze
+					// Zum Testen kann eingestellt werden, dass der Spieler cheaten soll.
+					// Dadurch wird die Funktion meinSpieler.sortierungFestlegen() beeinflusst.
+					//meinSpieler.setSollCheaten(true);
+					// stop lze
 					meinSpieler.sortierungFestlegen();
 					ausgabeKartenSet();
 					// ggfs. Spielverlauf löschen
@@ -150,6 +160,10 @@ public class YoolooClient {
 		System.out.println("[id-" + meinSpieler.getClientHandlerId() + "]ClientStatus: " + clientState
 				+ "] : Empfange Stich " + iStich);
 		if (iStich.getSpielerNummer() == meinSpieler.getClientHandlerId()) {
+			if(Files.notExists(Path.of(this.spielerName+".txt"))){
+				Files.createFile(Path.of(this.spielerName+".txt"));
+			}
+			Files.writeString(Path.of(this.spielerName+".txt"),stichNummer+"::"+meinSpieler.getAktuelleSortierung()[stichNummer].getWert()+"\n", StandardOpenOption.APPEND);
 			System.out.print(
 					"[id-" + meinSpieler.getClientHandlerId() + "]ClientStatus: " + clientState + "] : Gewonnen - ");
 			meinSpieler.erhaeltPunkte(iStich.getStichNummer() + 1);
