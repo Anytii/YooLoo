@@ -240,7 +240,7 @@ public class YoolooClientHandler extends Thread {
 		// ausgabeSpielplan(); // Fuer Debuginformationen sinnvoll
 		while (aktuellerStich == null) {
 			try {
-				LOGGER.log("[ClientHandler" + clientHandlerId + "] warte " + delay + " ms ");
+//				LOGGER.log("[ClientHandler" + clientHandlerId + "] warte " + delay + " ms ");
 				Thread.sleep(delay);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
