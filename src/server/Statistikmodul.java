@@ -44,7 +44,7 @@ public class Statistikmodul {
 		try {
 			for(int i=0; i<Clienthandlerlist.size(); i++) {
 				while (Clienthandlerlist.get(i).getPlayer() == null) {
-					Thread.sleep(1000);
+					Thread.sleep(5000);
 				}
 			}
 			sortClienthandlerbyPlace(Clienthandlerlist);
@@ -192,7 +192,7 @@ public class Statistikmodul {
 							player_stats.put("totale_Spiele", total_spiele);
 							total_players = total_players + (int) players.size();
 							player_stats.put("totale_Spieler", total_players);
-							double avg_player = (double) total_players / (double) total_spiele;
+							double avg_player = (double) total_spiele / (double) total_players;
 							player_stats.put("durchschnitt_Spieler_pro_runde", (double) (avg_player));
 							String winner = (String) cur_match.get("Gewinner");
 							if (winner.equals(Player)) {
