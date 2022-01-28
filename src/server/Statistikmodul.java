@@ -212,7 +212,7 @@ public class Statistikmodul {
 							} else {
 								player_stats.put("best_placement", highscore_place);
 							}
-							average_placement = (double) total_palcements / (double) total_spiele;
+							average_placement = (double) total_spiele / (double) total_palcements;
 							player_stats.put("average_place", average_placement);
 							relative_wins = (double) total_wins / (double) total_spiele;
 							player_stats.put("relative_wins", relative_wins);
