@@ -23,7 +23,7 @@ public class YoolooSpieler implements Serializable {
     private int punkte;
     private YoolooKarte[] aktuelleSortierung;
     private int Cheatversuche;
-	  private boolean sollCheaten;
+    private boolean sollCheaten;
 
     public YoolooSpieler(String name, int maxKartenWert) {
         this.name = name;
@@ -31,7 +31,7 @@ public class YoolooSpieler implements Serializable {
         this.spielfarbe = null;
         this.aktuelleSortierung = new YoolooKarte[maxKartenWert];
       	this.Cheatversuche = 0;
-		    this.sollCheaten = false;
+      	this.sollCheaten = false;
     }
 
 
@@ -116,6 +116,9 @@ public class YoolooSpieler implements Serializable {
 
     public void setAktuelleSortierung(YoolooKarte[] aktuelleSortierung) {
         this.aktuelleSortierung = aktuelleSortierung;
+        if(sollCheaten) {
+        	cheaten();
+        }
     }
 
     public void stichAuswerten(YoolooStich stich) {
