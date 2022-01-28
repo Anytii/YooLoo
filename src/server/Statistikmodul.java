@@ -42,8 +42,10 @@ public class Statistikmodul {
 	 */
 	public void update_history(ArrayList<YoolooClientHandler> Clienthandlerlist) {
 		try {
-			while (Clienthandlerlist.get(1).getPlayer() == null) {
-				Thread.sleep(10000);
+			for(int i=0; i<Clienthandlerlist.size(); i++) {
+				while (Clienthandlerlist.get(i).getPlayer() == null) {
+					Thread.sleep(1000);
+				}
 			}
 			sortClienthandlerbyPlace(Clienthandlerlist);
 			JSONParser jsonParser = new JSONParser();
